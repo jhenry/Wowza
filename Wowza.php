@@ -123,12 +123,21 @@ class Wowza extends PluginAbstract
 
 	/**
 	 * Get user homedirectory from their ID.
+	 * 
+	 * @param int $user_id id of the user whose homedir we are querying.
 	 */
 	public function get_user_homedirectory($user_id)
 	{
-		$userReMapper = LDAP::get_user_remapper();
-		$user = $userReMapper->getUserByID($user_id);
-		return $user->homedirectory;
+		if (class_exists('UserMetaMapper')) 
+		{
+		$metaMapper = new UserMetaMapper;
+		$userMeta = $metaMapper::getByCustom(array('user_id' => $user_id));
+		return $userMeta->homeDirectory;
+		}
+		else {
+			throw new Exception('Dependency Error: This plugin requires ExtendedUser plugin (missing UserMetaMapper class).')
+			return false;
+		}
 	}
 
 	/**
@@ -156,10 +165,7 @@ class Wowza extends PluginAbstract
 	{
 		$vmapper = new VideoMapper();
 		$video = $vmapper->getVideoById($video_id);
-		$user_mapper = LDAP::get_user_remapper();
-		$user = $user_mapper->getUserByID($video->userId);
-
-		return $user->homedirectory;
+		return Wowza::get_user_homedirectory($video->userId);
 	}
 
 	/**
