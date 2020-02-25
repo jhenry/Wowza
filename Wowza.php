@@ -96,17 +96,26 @@ class Wowza extends PluginAbstract
 		$config = Registry::get('config');
 		$config->default_upload_path = $wowza_root . $homedirectory;
 		Registry::set('config', $config);
-
-		// Make sure the appropriate directories exist
-		Filesystem::createDir($config->default_upload_path . '/temp/');
-		Filesystem::createDir($config->default_upload_path . '/h264/');
-		Filesystem::createDir($config->default_upload_path . '/HD720/');
-		Filesystem::createDir($config->default_upload_path . '/thumbs/');
-		Filesystem::createDir($config->default_upload_path . '/mobile/');
-		Filesystem::createDir($config->default_upload_path . '/avatars/');
-		Filesystem::createDir($config->default_upload_path . '/mp3/');
-		Filesystem::createDir($config->default_upload_path . '/files/attachments/');
+		Wowza::initialize_directories($path)
 	}
+
+	/**
+	 * Create directories in the upload path.
+	 */
+	public function initialize_directories($path)
+	{
+	
+		Filesystem::createDir($path . '/temp/');
+		Filesystem::createDir($path . '/h264/');
+		Filesystem::createDir($path . '/HD720/');
+		Filesystem::createDir($path  . '/thumbs/');
+		Filesystem::createDir($path  . '/mobile/');
+		Filesystem::createDir($path  . '/avatars/');
+		Filesystem::createDir($path  . '/mp3/');
+		Filesystem::createDir($path  . '/files/attachments/');
+		                       
+	}
+
 
 	/**
 	 * Set homedirectory session vars.
@@ -117,6 +126,7 @@ class Wowza extends PluginAbstract
 		$user = $authService->getAuthUser();
 
 		if ($user) {
+
 			$_SESSION['homedirectory'] = Wowza::get_user_homedirectory($user->userId);
 		}
 	}
@@ -128,14 +138,14 @@ class Wowza extends PluginAbstract
 	 */
 	public function get_user_homedirectory($user_id)
 	{
-		if (class_exists('UserMetaMapper')) 
+		if (class_exists('ExtendedUser')) 
 		{
-		$metaMapper = new UserMetaMapper;
-		$userMeta = $metaMapper::getByCustom(array('user_id' => $user_id));
-		return $userMeta->homeDirectory;
+			$extendedUser = new ExtendedUser();
+			$meta =  $extendedUser::get_meta($user_id, 'homeDirectory');
+			return $meta->homeDirectory;
 		}
 		else {
-			throw new Exception('Dependency Error: This plugin requires ExtendedUser plugin (missing UserMetaMapper class).')
+			throw new Exception('Dependency Error: This plugin requires ExtendedUser plugin.');
 			return false;
 		}
 	}
