@@ -14,6 +14,10 @@
         <label class="control-label">RTMP Host:</label>
         <input class="form-control" type="text" name="wowza_rtmp_host" value="<?=$data['wowza_rtmp_host']?>" />
     </div>
+    <div class="form-group <?=(isset ($errors['wowza_url_path'])) ? 'has-error' : ''?>">
+        <label class="control-label">URL Path:</label>
+        <input class="form-control" type="text" name="wowza_url_path" value="<?=$data['wowza_url_path']?>" placeholder="/wowza-assets" />
+    </div>
 
     <input type="hidden" value="yes" name="submitted" />
     <input type="hidden" name="nonce" value="<?=$formNonce?>" />
