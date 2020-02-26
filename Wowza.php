@@ -96,7 +96,7 @@ class Wowza extends PluginAbstract
 		$config = Registry::get('config');
 		$config->default_upload_path = $wowza_root . $homedirectory;
 		Registry::set('config', $config);
-		Wowza::initialize_directories($path)
+		Wowza::initialize_directories($path);
 	}
 
 	/**
