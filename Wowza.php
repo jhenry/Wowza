@@ -66,12 +66,6 @@ class Wowza extends PluginAbstract
     Wowza::set_encoder_path();
     Wowza::set_path_from_session();
 
-
-    // URL fragment to reflect where thumbs are being placed.
-    // TODO: Move to settings
-    $config = Registry::get('config');
-    $config->thumbUrl = dirname(HOST) . "/wowza";
-    Registry::set('config', $config);
   }
 
   /**
@@ -83,8 +77,6 @@ class Wowza extends PluginAbstract
     if (isset($_SESSION['homedirectory'])) {
       $homedirectory = $_SESSION['homedirectory'];
       Wowza::set_upload_path($homedirectory);
-      // set urls for thumbs, etc.
-      Wowza::set_converted_urls($homedirectory);
     }
 
   }
