@@ -159,22 +159,6 @@ class Wowza extends PluginAbstract
   }
 
   /**
-   * Set url paths for converted videos
-   */
-  public function set_converted_urls($homedirectory)
-  {
-    $wowza_path = Settings::get('wowza_url_path') . $homedirectory;
-
-    $config = Registry::get('config');
-    $config->h264Url =  BASE_URL . $wowza_path  . '/h264';
-    $config->theoraUrl = BASE_URL . $wowza_path . '/theora';
-    $config->webmUrl = BASE_URL . $wowza_path . '/webm';
-    $config->mobileUrl = BASE_URL . $wowza_path . '/mobile';
-    $config->thumbUrl = BASE_URL . $wowza_path . '/thumbs';
-    Registry::set('config', $config);
-  }
-
-  /**
    * Get the home directory for the user who created the video.
    * 
    */
