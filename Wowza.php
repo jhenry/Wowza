@@ -44,6 +44,7 @@ class Wowza extends PluginAbstract
    */
   public function load()
   {
+    Wowza::set_asset_directories();
     Plugin::attachEvent('app.start', array(__CLASS__, 'get_upload_path'));
 
     if (!headers_sent() && session_id() == '') {
@@ -114,14 +115,10 @@ class Wowza extends PluginAbstract
    */
   public function initialize_directories($path)
   {
-    Filesystem::createDir($path . '/temp/');
-    Filesystem::createDir($path . '/h264/');
-    Filesystem::createDir($path . '/HD720/');
-    Filesystem::createDir($path  . '/thumbs/');
-    Filesystem::createDir($path  . '/mobile/');
-    Filesystem::createDir($path  . '/avatars/');
-    Filesystem::createDir($path  . '/mp3/');
-    Filesystem::createDir($path  . '/files/attachments/');
+    $dirs = Wowza::get_asset_directories();
+    foreach( $dirs as $directory) {
+      Filesystem::createDir($path . $directory);
+    }
   }
 
   /**
@@ -165,6 +162,38 @@ class Wowza extends PluginAbstract
     $video = $vmapper->getVideoById($video_id);
     return Wowza::get_user_homedirectory($video->userId);
   }
+
+  /**
+   * Get a list of url fragments/directory names for 
+   * assets such as thumbnails, avatars, etc.
+   * 
+   */
+  public function get_asset_directories()
+  {
+    return json_decode(Settings::get('wowza_asset_dirs'));
+  }
+
+  /**
+   * Set up paths for url fragments/directory names.
+   * 
+   */
+  public function set_asset_directories()
+  {
+    $paths = array(
+      "temp" => "/temp/",
+      "h264" => "/h264/",
+      "hd" => "/HD720/",
+      "thumbs" => "/thumbs/",
+      "mobile" => "/mobile/",
+      "avatars" => "/avatars/",
+      "mp3" => "/mp3/",
+      "attachments" => "/files/attachments/"
+    );
+
+    Settings::set('wowza_asset_dirs', json_encode($paths));
+
+  }
+
 
   /**
    * Outputs the settings page HTML and handles form posts on the plugin's
