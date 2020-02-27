@@ -62,10 +62,8 @@ class Wowza extends PluginAbstract
    */
   public function get_upload_path()
   {
-
     Wowza::set_encoder_path();
     Wowza::set_path_from_session();
-
   }
 
   /**
@@ -74,8 +72,8 @@ class Wowza extends PluginAbstract
   public function set_path_from_session()
   {
     // If we're logged in we'll set it from session data.
-    if (isset($_SESSION['homedirectory'])) {
-      $homedirectory = $_SESSION['homedirectory'];
+    if (isset($_SESSION['homeDirectory'])) {
+      $homedirectory = $_SESSION['homeDirectory'];
       Wowza::set_upload_path($homedirectory);
     }
 
@@ -108,7 +106,7 @@ class Wowza extends PluginAbstract
     $config = Registry::get('config');
     $config->default_upload_path = $wowza_root . $homedirectory;
     Registry::set('config', $config);
-    Wowza::initialize_directories($path);
+    Wowza::initialize_directories($config->default_upload_path);
   }
 
   /**
@@ -133,9 +131,8 @@ class Wowza extends PluginAbstract
   {
     $authService = new AuthService();
     $user = $authService->getAuthUser();
-
     if ($user) {
-      $_SESSION['homedirectory'] = Wowza::get_user_homedirectory($user->userId);
+      $_SESSION['homeDirectory'] = Wowza::get_user_homedirectory($user->userId);
     }
   }
 
@@ -150,7 +147,7 @@ class Wowza extends PluginAbstract
     {
       $extendedUser = new ExtendedUser();
       $meta =  $extendedUser::get_meta($user_id, 'homeDirectory');
-      return $meta->homeDirectory;
+      return $meta->meta_value;
     }
     else {
       throw new Exception('Dependency Error: This plugin requires ExtendedUser plugin.');
