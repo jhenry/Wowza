@@ -164,6 +164,38 @@ class Wowza extends PluginAbstract
   }
 
   /**
+   * Get a url for a specific video's assets 
+   * 
+   */
+  public function get_url_by_video_id($video_id, $asset_type)
+  {
+    $user_path = Wowza::get_video_owner_homedir($video_id);
+    $url = BASE_URL . $user_path . Wowza::get_asset_dir($asset_type);
+    return $url;
+  }
+
+  /**
+   * Get a url for a specific user's assets 
+   * 
+   */
+  public function get_url_by_user_id($user_id, $asset_type)
+  {
+    $user_path = Wowza::get_user_homedirectory($user_id);
+    $url = BASE_URL . $user_path . Wowza::get_asset_dir($asset_type);
+    return $url;
+  }
+
+  /**
+   * Get a single url fragment/directory name  
+   * 
+   */
+  public function get_asset_dir($asset_type)
+  {
+    $asset_dirs = Wowza::get_asset_directories();
+    return $asset_dirs[$asset_type];
+  }
+
+  /**
    * Get a list of url fragments/directory names for 
    * assets such as thumbnails, avatars, etc.
    * 
@@ -172,6 +204,7 @@ class Wowza extends PluginAbstract
   {
     return json_decode(Settings::get('wowza_asset_dirs'));
   }
+
 
   /**
    * Set up paths for url fragments/directory names.
