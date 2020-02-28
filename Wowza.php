@@ -170,7 +170,8 @@ class Wowza extends PluginAbstract
   public function get_url_by_video_id($video_id, $asset_type)
   {
     $user_path = Wowza::get_video_owner_homedir($video_id);
-    $url = BASE_URL . $user_path . Wowza::get_asset_dir($asset_type);
+    $wowza_url = Settings::get('wowza_url_path');
+    $url = $wowza_url . $user_path . Wowza::get_asset_dir($asset_type);
     return $url;
   }
 
@@ -181,7 +182,8 @@ class Wowza extends PluginAbstract
   public function get_url_by_user_id($user_id, $asset_type)
   {
     $user_path = Wowza::get_user_homedirectory($user_id);
-    $url = BASE_URL . $user_path . Wowza::get_asset_dir($asset_type);
+    $wowza_url = Settings::get('wowza_url_path');
+    $url = $wowza_url . $user_path . Wowza::get_asset_dir($asset_type);
     return $url;
   }
 
