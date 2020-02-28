@@ -192,7 +192,7 @@ class Wowza extends PluginAbstract
   public function get_asset_dir($asset_type)
   {
     $asset_dirs = Wowza::get_asset_directories();
-    return $asset_dirs[$asset_type];
+    return $asset_dirs->$asset_type;
   }
 
   /**
