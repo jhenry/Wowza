@@ -44,18 +44,26 @@ class Wowza extends PluginAbstract
    */
   public function load()
   {
-    Wowza::set_asset_directories();
-    Plugin::attachEvent('app.start', array(__CLASS__, 'get_upload_path'));
+	
+	$directory = Settings::get('wowza_upload_dir'); 
+	if(file_exists($directory) ) {
+		Wowza::set_asset_directories();
+		Plugin::attachEvent('app.start', array(__CLASS__, 'get_upload_path'));
 
-    if (!headers_sent() && session_id() == '') {
-      session_start();
-    }
+		if (!headers_sent() && session_id() == '') {
+			session_start();
+		}
 
-    // Make sure homedir is set on any of these pages.
-    Plugin::attachEvent('account.start', array(__CLASS__, 'set_homedirectory_session'));
-    Plugin::attachEvent('upload_video.start', array(__CLASS__, 'set_homedirectory_session'));
-    Plugin::attachEvent('upload.start', array(__CLASS__, 'set_homedirectory_session'));
-    Plugin::attachEvent('edit_video.start', array(__CLASS__, 'set_homedirectory_session'));
+		// Make sure homedir is set on any of these pages.
+		Plugin::attachEvent('account.start', array(__CLASS__, 'set_homedirectory_session'));
+		Plugin::attachEvent('upload_video.start', array(__CLASS__, 'set_homedirectory_session'));
+		Plugin::attachEvent('upload.start', array(__CLASS__, 'set_homedirectory_session'));
+		Plugin::attachEvent('edit_video.start', array(__CLASS__, 'set_homedirectory_session'));
+	}
+	else{
+		$message = "Wowza installed but not configured.  Edit plugin settings and ensure directory is mounted in order to proceed.";
+		$message_type = "alert-warning";
+	}
   }
 
   /**
