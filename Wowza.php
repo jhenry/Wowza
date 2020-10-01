@@ -124,8 +124,10 @@ class Wowza extends PluginAbstract
   public function initialize_directories($path)
   {
     $dirs = Wowza::get_asset_directories();
+    $fullPath = "";
     foreach( $dirs as $directory) {
-      Filesystem::createDir($path . $directory);
+	$fullPath = $path . $directory;
+	Filesystem::createDir($fullPath);
     }
   }
 
@@ -150,9 +152,13 @@ class Wowza extends PluginAbstract
   {
     if (class_exists('ExtendedUser')) 
     {
-      $extendedUser = new ExtendedUser();
-      $meta =  $extendedUser::get_meta($user_id, 'homeDirectory');
-      return $meta->meta_value;
+	    $meta =  ExtendedUser::get_meta($user_id, 'homeDirectory');
+	    if ($meta) {
+		    return $meta->meta_value;
+	    } else {
+		    throw new Exception('Error: User meta (homeDirectory) not found for user with id: ' . $user_id);
+		    return false;
+	    }
     }
     else {
       throw new Exception('Dependency Error: This plugin requires ExtendedUser plugin.');
