@@ -190,6 +190,19 @@ class Wowza extends PluginAbstract
   }
 
   /**
+   * Get the URL and path for the SMIL file for a specific video.
+   * 
+   */
+  public function getSmilUrl($video)
+  {
+    $wowza_url = Settings::get('wowza_rtmp_host');
+    $user_path = Wowza::get_video_owner_homedir($video->videoId);
+    $trimmed_path = ltrim($user_path, '/');
+    $url = $wowza_url . "smil:" . $trimmed_path .  "/" .$video->filename . ".smil/";
+    return $url;
+  }
+
+  /**
    * Get a url for a specific user's assets 
    * 
    */
