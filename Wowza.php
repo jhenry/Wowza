@@ -59,6 +59,8 @@ class Wowza extends PluginAbstract
 		Plugin::attachEvent('upload_video.start', array(__CLASS__, 'set_homedirectory_session'));
 		Plugin::attachEvent('upload.start', array(__CLASS__, 'set_homedirectory_session'));
 		Plugin::attachEvent('edit_video.start', array(__CLASS__, 'set_homedirectory_session'));
+
+        Plugin::attachFilter ( 'router.static_routes' , array( __CLASS__ , 'addUserUrlRoute' ) );
 	}
 	else{
 		$message = "Wowza installed but not configured.  Edit plugin settings and ensure directory is mounted in order to proceed.";
@@ -254,6 +256,21 @@ class Wowza extends PluginAbstract
 
     Settings::set('wowza_asset_dirs', json_encode($paths));
 
+  }
+
+  /**
+   * Add route for getting user's url
+   * 
+   */
+  public static function addUserUrlRoute($routes)
+  {
+    $routes['api-wowza-user'] = new Route(array(
+          'path' => 'api/wowza/user/([0-9]+)/([a-z0-9]+)',
+          'location' => DOC_ROOT . '/cc-content/plugins/Wowza/user.url.php',
+          'mappings' => array('userId', 'assetType'),
+          'name' => 'api-wowza-user'
+          ));
+    return $routes;
   }
 
 
