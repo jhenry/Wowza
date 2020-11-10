@@ -270,6 +270,12 @@ class Wowza extends PluginAbstract
           'mappings' => array('userId', 'assetType'),
           'name' => 'api-wowza-user'
           ));
+    $routes['api-wowza-video'] = new Route(array(
+          'path' => 'api/wowza/video/([0-9]+)/([a-z0-9]+)',
+          'location' => DOC_ROOT . '/cc-content/plugins/Wowza/video.url.php',
+          'mappings' => array('videoId', 'assetType'),
+          'name' => 'api-wowza-video'
+          ));
     return $routes;
   }
 
