@@ -61,6 +61,7 @@ class Wowza extends PluginAbstract
 		Plugin::attachEvent('edit_video.start', array(__CLASS__, 'set_homedirectory_session'));
 
         Plugin::attachFilter ( 'router.static_routes' , array( __CLASS__ , 'addUserUrlRoute' ) );
+        Plugin::attachFilter ( 'filesystem.setpermissions.chmod' , array( __CLASS__ , 'skipChmod' ) );
 	}
 	else{
 		$message = "Wowza installed but not configured.  Edit plugin settings and ensure directory is mounted in order to proceed.";
@@ -77,6 +78,13 @@ class Wowza extends PluginAbstract
     Wowza::set_path_from_session();
   }
 
+  /**
+   * Prevent application from trying to chmod after file creation
+   */
+  public function skipChmod()
+  {
+    return true;
+  }
   /**
    * 
    */
