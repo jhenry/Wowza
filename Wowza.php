@@ -52,6 +52,8 @@ class Wowza extends PluginAbstract
 
 		if (!headers_sent() && session_id() == '') {
 			session_start();
+            $authService = new \AuthService();
+            $authService->setTimeoutFlags();
 		}
 
 		// Make sure homedir is set on any of these pages.
