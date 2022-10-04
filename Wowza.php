@@ -74,7 +74,7 @@ class Wowza extends PluginAbstract
   /**
    * Set default upload path.  Requires changes to bootstrap.php.
    */
-  public function get_upload_path()
+  public static function get_upload_path()
   {
     Wowza::set_encoder_path();
     Wowza::set_path_from_session();
@@ -83,14 +83,14 @@ class Wowza extends PluginAbstract
   /**
    * Prevent application from trying to chmod after file creation
    */
-  public function skipChmod()
+  public static function skipChmod()
   {
     return true;
   }
   /**
    * 
    */
-  public function set_path_from_session()
+  public static function set_path_from_session()
   {
     // If we're logged in we'll set it from session data.
     if (isset($_SESSION['homeDirectory'])) {
@@ -104,7 +104,7 @@ class Wowza extends PluginAbstract
    * When the application is running via command-line in the encoder, 
    * use the video id to set the upload path.
    */
-  public function set_encoder_path()
+  public static function set_encoder_path()
   {
     // Get encoder command line vars
     $arguments = getopt('', array('video:', 'import::'));
@@ -120,7 +120,7 @@ class Wowza extends PluginAbstract
   /**
    * Set default upload path.  Requires changes to bootstrap.php.
    */
-  public function set_upload_path($homedirectory)
+  public static function set_upload_path($homedirectory)
   {
     $wowza_root = Settings::get('wowza_upload_dir');
 
@@ -133,7 +133,7 @@ class Wowza extends PluginAbstract
   /**
    * Create directories in the upload path.
    */
-  public function initialize_directories($path)
+  public static function initialize_directories($path)
   {
     $dirs = Wowza::get_asset_directories();
     $fullPath = "";
@@ -146,7 +146,7 @@ class Wowza extends PluginAbstract
   /**
    * Set homedirectory session vars.
    */
-  public function set_homedirectory_session()
+  public static function set_homedirectory_session()
   {
     $authService = new AuthService();
     $user = $authService->getAuthUser();
@@ -160,7 +160,7 @@ class Wowza extends PluginAbstract
    * 
    * @param int $user_id id of the user whose homedir we are querying.
    */
-  public function get_user_homedirectory($user_id)
+  public static function get_user_homedirectory($user_id)
   {
     if (class_exists('ExtendedUser')) 
     {
@@ -182,7 +182,7 @@ class Wowza extends PluginAbstract
    * Get the home directory for the user who created the video.
    * 
    */
-  public function get_video_owner_homedir($video_id)
+  public static function get_video_owner_homedir($video_id)
   {
     $vmapper = new VideoMapper();
     $video = $vmapper->getVideoById($video_id);
@@ -193,7 +193,7 @@ class Wowza extends PluginAbstract
    * Get a url for a specific video's assets 
    * 
    */
-  public function get_url_by_video_id($video_id, $asset_type)
+  public static function get_url_by_video_id($video_id, $asset_type)
   {
     $user_path = Wowza::get_video_owner_homedir($video_id);
     $wowza_url = Settings::get('wowza_url_path');
@@ -205,7 +205,7 @@ class Wowza extends PluginAbstract
    * Get the URL and path for the SMIL file for a specific video.
    * 
    */
-  public function getSmilUrl($video)
+  public static function getSmilUrl($video)
   {
     $wowza_url = Settings::get('wowza_rtmp_host');
     $user_path = Wowza::get_video_owner_homedir($video->videoId);
@@ -218,7 +218,7 @@ class Wowza extends PluginAbstract
    * Get a url for a specific user's assets 
    * 
    */
-  public function get_url_by_user_id($user_id, $asset_type)
+  public static function get_url_by_user_id($user_id, $asset_type)
   {
     $user_path = Wowza::get_user_homedirectory($user_id);
     $wowza_url = Settings::get('wowza_url_path');
@@ -230,7 +230,7 @@ class Wowza extends PluginAbstract
    * Get a single url fragment/directory name  
    * 
    */
-  public function get_asset_dir($asset_type)
+  public static function get_asset_dir($asset_type)
   {
     $asset_dirs = Wowza::get_asset_directories();
     return $asset_dirs->$asset_type;
@@ -241,7 +241,7 @@ class Wowza extends PluginAbstract
    * assets such as thumbnails, avatars, etc.
    * 
    */
-  public function get_asset_directories()
+  public static function get_asset_directories()
   {
     return json_decode(Settings::get('wowza_asset_dirs'));
   }
@@ -251,7 +251,7 @@ class Wowza extends PluginAbstract
    * Set up paths for url fragments/directory names.
    * 
    */
-  public function set_asset_directories()
+  public static function set_asset_directories()
   {
     $paths = array(
       "temp" => "/temp/",
